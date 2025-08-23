@@ -1,0 +1,95 @@
+{
+  "info": {
+    "name": "Scoreboard API - Partido Completo",
+    "_postman_id": "c2cfe3a1-d5a4-4a8a-9e9a-9af14d0a1aa9",
+    "description": "Colección para simular un partido de baloncesto completo con la API de Scoreboard.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5204/api" }
+  ],
+  "item": [
+    {
+      "name": "Setup (Teams & Players)",
+      "item": [
+        {
+          "name": "Create Home Team",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Lakers\",\n  \"city\": \"Los Angeles\",\n  \"logoUrl\": \"https://example.com/lakers.png\"\n}" },
+            "url": "{{baseUrl}}/teams"
+          }
+        },
+        {
+          "name": "Create Visitor Team",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Celtics\",\n  \"city\": \"Boston\",\n  \"logoUrl\": \"https://example.com/celtics.png\"\n}" },
+            "url": "{{baseUrl}}/teams"
+          }
+        },
+        {
+          "name": "Create Player (Home - LeBron James)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"teamId\": 1,\n  \"jerseyNumber\": 23,\n  \"fullName\": \"LeBron James\",\n  \"position\": \"Forward\"\n}" },
+            "url": "{{baseUrl}}/players"
+          }
+        },
+        {
+          "name": "Create Player (Visitor - Jayson Tatum)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"teamId\": 2,\n  \"jerseyNumber\": 0,\n  \"fullName\": \"Jayson Tatum\",\n  \"position\": \"Forward\"\n}" },
+            "url": "{{baseUrl}}/players"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Game Flow",
+      "item": [
+        {
+          "name": "Create Game",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"homeTeamId\": 1,\n  \"awayTeamId\": 2,\n  \"gameDate\": \"2025-08-21T20:00:00\"\n}" },
+            "url": "{{baseUrl}}/games"
+          }
+        },
+        {
+          "name": "Start Game (10 min period)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"periodSeconds\": 600\n}" },
+            "url": "{{baseUrl}}/games/1/start"
+          }
+        },
+        { "name": "Home scores 2 points", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"points\": 2 }" }, "url": "{{baseUrl}}/games/1/score/home" } },
+        { "name": "Visitor scores 3 points", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"points\": 3 }" }, "url": "{{baseUrl}}/games/1/score/visitor" } },
+        { "name": "Home commits team foul", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/fouls/team/1/inc?period=1" } },
+        { "name": "Visitor commits player foul (Tatum)", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/fouls/player/2/inc?period=1" } },
+        { "name": "Pause Game", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/pause" } },
+        { "name": "Resume Game", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/resume" } },
+        { "name": "Home scores 3 points", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"points\": 3 }" }, "url": "{{baseUrl}}/games/1/score/home" } },
+        { "name": "End 1st Period - Next Period", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/next-period" } },
+        { "name": "Reset Period (10 min)", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"periodSeconds\": 600 }" }, "url": "{{baseUrl}}/games/1/reset-period" } },
+        { "name": "Visitor scores 2 points", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{ \"points\": 2 }" }, "url": "{{baseUrl}}/games/1/score/visitor" } },
+        { "name": "Home player commits foul (LeBron)", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/fouls/player/1/inc?period=2" } },
+        { "name": "Pause Game", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/pause" } },
+        { "name": "Resume Game", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/resume" } },
+        { "name": "Next Period (3rd)", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/next-period" } },
+        { "name": "Next Period (4th)", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/next-period" } },
+        { "name": "Suspend Game", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/suspend" } },
+        { "name": "Save Game", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/save" } },
+        { "name": "Get Final Game State", "request": { "method": "GET", "url": "{{baseUrl}}/games/1" } }
+      ]
+    }
+  ]
+}

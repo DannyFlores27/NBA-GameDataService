@@ -1,0 +1,133 @@
+{
+  "info": {
+    "name": "Scoreboard API",
+    "_postman_id": "4d7f2e3a-9c12-47bb-93b4-8afebac201aa",
+    "description": "Colección para probar la API de Scoreboard (Teams, Players, Games).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5204/api" }
+  ],
+  "item": [
+    {
+      "name": "Teams",
+      "item": [
+        {
+          "name": "Get all teams",
+          "request": { "method": "GET", "url": "{{baseUrl}}/teams" }
+        },
+        {
+          "name": "Get team by id",
+          "request": { "method": "GET", "url": "{{baseUrl}}/teams/1" }
+        },
+        {
+          "name": "Create team",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Lakers\",\n  \"city\": \"Los Angeles\",\n  \"logoUrl\": \"https://example.com/logo.png\"\n}"
+            },
+            "url": "{{baseUrl}}/teams"
+          }
+        },
+        {
+          "name": "Update team",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": 1,\n  \"name\": \"Updated Team\",\n  \"city\": \"Updated City\",\n  \"logoUrl\": \"https://example.com/logo2.png\"\n}"
+            },
+            "url": "{{baseUrl}}/teams/1"
+          }
+        },
+        {
+          "name": "Delete team",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/teams/1" }
+        }
+      ]
+    },
+    {
+      "name": "Players",
+      "item": [
+        {
+          "name": "Get all players",
+          "request": { "method": "GET", "url": "{{baseUrl}}/players" }
+        },
+        {
+          "name": "Get player by id",
+          "request": { "method": "GET", "url": "{{baseUrl}}/players/1" }
+        },
+        {
+          "name": "Create player",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teamId\": 1,\n  \"jerseyNumber\": 23,\n  \"fullName\": \"LeBron James\",\n  \"position\": \"Forward\"\n}"
+            },
+            "url": "{{baseUrl}}/players"
+          }
+        },
+        {
+          "name": "Update player",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"playerId\": 1,\n  \"teamId\": 1,\n  \"jerseyNumber\": 6,\n  \"fullName\": \"Updated Name\",\n  \"position\": \"Guard\"\n}"
+            },
+            "url": "{{baseUrl}}/players/1"
+          }
+        },
+        {
+          "name": "Delete player",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/players/1" }
+        }
+      ]
+    },
+    {
+      "name": "Games",
+      "item": [
+        {
+          "name": "Create game",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"homeTeamId\": 1,\n  \"awayTeamId\": 2,\n  \"gameDate\": \"2025-08-21T20:00:00\"\n}"
+            },
+            "url": "{{baseUrl}}/games"
+          }
+        },
+        {
+          "name": "Get game by id",
+          "request": { "method": "GET", "url": "{{baseUrl}}/games/1" }
+        },
+        { "name": "Add home points", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"points\": 2\n}" }, "url": "{{baseUrl}}/games/1/score/home" } },
+        { "name": "Add visitor points", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"points\": 3\n}" }, "url": "{{baseUrl}}/games/1/score/visitor" } },
+        { "name": "Subtract home point", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/score/home/decrement" } },
+        { "name": "Subtract visitor point", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/score/visitor/decrement" } },
+        { "name": "Inc team foul", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/fouls/team/1/inc?period=1" } },
+        { "name": "Dec team foul", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/fouls/team/1/dec?period=1" } },
+        { "name": "Inc player foul", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/fouls/player/1/inc?period=1" } },
+        { "name": "Dec player foul", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/fouls/player/1/dec?period=1" } },
+        { "name": "Start game", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"periodSeconds\": 600\n}" }, "url": "{{baseUrl}}/games/1/start" } },
+        { "name": "Pause game", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/pause" } },
+        { "name": "Resume game", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/resume" } },
+        { "name": "Reset period", "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"periodSeconds\": 600\n}" }, "url": "{{baseUrl}}/games/1/reset-period" } },
+        { "name": "Next period", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/next-period" } },
+        { "name": "Previous period", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/previous-period" } },
+        { "name": "Reset game", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/reset-game" } },
+        { "name": "Suspend game", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/suspend" } },
+        { "name": "Save game", "request": { "method": "POST", "url": "{{baseUrl}}/games/1/save" } }
+      ]
+    }
+  ]
+}
