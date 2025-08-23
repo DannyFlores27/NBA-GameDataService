@@ -1,5 +1,5 @@
 
-# Scoreboard API - Basketball Game Management
+# GameDataService API - Basketball Game Management
 
 ## Descripción
 Scoreboard API es un proyecto de pruebas en C# (.NET 8+) para la gestión de partidos de baloncesto. Permite:
@@ -135,7 +135,23 @@ app.Run();
 
 ## Uso
 
-1. Configura la cadena de conexión en `appsettings.json`:
+1. Clonar, instalar dependencias y construir solución del proyecto
+
+Clona el repositorio y navega a la carpeta del proyecto:
+
+```bash
+git clone <URL_DEL_REPOSITORIO>
+cd GameDataService
+```
+
+Restaura dependencias y contruir solución del proyecto:
+
+```bash
+dotnet restore
+dotnet build
+```
+
+2. Configura la cadena de conexión en `appsettings.json`:
 
 ```json
 {
@@ -145,17 +161,17 @@ app.Run();
 }
 ```
 
-2. Ejecuta el proyecto con:
+3. Ejecuta el proyecto con:
 
 ```bash
 dotnet run
 ```
 
-3. Accede a Swagger UI: `https://localhost:5001/swagger/index.html`
+4. Accede a Swagger UI: `https://localhost:5001/swagger/index.html`
 
-4. Usa Postman o cualquier cliente REST para probar los endpoints.
+5. Usa Postman o cualquier cliente REST para probar los endpoints.
 
-5. Si borras la base de datos y vuelves a correr `dotnet run`, la base se creará automáticamente.
+6. Si borras la base de datos y vuelves a correr `dotnet run`, la base se creará automáticamente.
 
 ## Notas
 
