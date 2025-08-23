@@ -169,7 +169,8 @@ dotnet run
 
 4. Accede a Swagger UI: `https://localhost:5204/swagger/index.html`
 
-5. Usa Postman o cualquier cliente REST para probar los endpoints.
+5. Usa Postman o cualquier cliente REST para probar los endpoints.  
+   📂 **Nota:** Hay una colección de Postman incluida en la carpeta `PostmanCollection` del proyecto que puedes importar para probar todos los endpoints de forma rápida.
 
 6. Si borras la base de datos y vuelves a correr `dotnet run`, la base se creará automáticamente usando Code First.  
    ⚠️ **Importante:** No elimines/limpies la tabla `__EFMigrationsHistory` manualmente si la base de datos sigue existiendo,  
