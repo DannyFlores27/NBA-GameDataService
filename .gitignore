@@ -46,3 +46,7 @@
 *.xproj.user
 *.dbmdl
 .vs/
+
+# Archivos de configuración y secretos
+appsettings.json
+appsettings.Development.json
