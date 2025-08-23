@@ -171,7 +171,9 @@ dotnet run
 
 5. Usa Postman o cualquier cliente REST para probar los endpoints.
 
-6. Si borras la base de datos y vuelves a correr `dotnet run`, la base se creará automáticamente.
+6. Si borras la base de datos y vuelves a correr `dotnet run`, la base se creará automáticamente usando Code First.  
+   ⚠️ **Importante:** No elimines/limpies la tabla `__EFMigrationsHistory` manualmente si la base de datos sigue existiendo,  
+   ya que esto causará conflictos al aplicar nuevas migraciones y podría intentar recrear tablas que ya existen.
 
 ## Notas
 
