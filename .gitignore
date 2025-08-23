@@ -1,0 +1,48 @@
+#
+# C# and .NET
+#
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+*.pdb
+*.suo
+*.user
+*.useros
+*.vspscc
+*.vssscc
+
+# Visual Studio files
+.vs/
+*.sln.docstates
+*PrivateAssemblies
+*.vsp
+*.log
+*.scc
+
+# Rider
+.idea/
+
+# NuGet packages
+[Pp]ackages/
+*.nupkg
+*.snupkg
+*.nupkg.metadata
+
+# Miscellaneous
+[Tt]emp/
+[Ll]ogs/
+[Tt]est[Rr]esults/
+[Rr]eports/
+*.tmp
+*.bak
+*.orig
+*~
+
+# Hide generated files
+*.csproj.user
+*.xproj.user
+*.dbmdl
+.vs/
