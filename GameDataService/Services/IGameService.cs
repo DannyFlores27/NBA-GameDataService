@@ -18,4 +18,6 @@ public interface IGameService
     Task<Game> PreviousPeriodAsync(int gameId);
     Task<Game> ResetGameAsync(int gameId);
     Task<Game> SuspendAsync(int gameId);
+    Task<Game> FinishGameAsync(int gameId);
+    Task<bool> IsTeamInActiveGameAsync(int teamId);
 }

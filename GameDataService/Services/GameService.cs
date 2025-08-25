@@ -10,8 +10,22 @@ public class GameService(IGameRepository gameRepo, ScoreboardDbContext ctx) : IG
     private readonly IGameRepository _gameRepo = gameRepo;
     private readonly ScoreboardDbContext _ctx = ctx;
 
+    public async Task<bool> IsTeamInActiveGameAsync(int teamId)
+    {
+        return await _ctx.Games
+            .AnyAsync(g =>
+                (g.HomeTeamId == teamId || g.AwayTeamId == teamId) &&
+                g.GameStatus != GameStatus.FINISHED &&
+                g.GameStatus != GameStatus.SUSPENDED
+            );
+    }
     public async Task<Game> CreateGameAsync(CreateGameDto dto)
     {
+        if (await IsTeamInActiveGameAsync(dto.HomeTeamId) || await IsTeamInActiveGameAsync(dto.AwayTeamId))
+        {
+            throw new InvalidOperationException("Uno de los equipos ya tiene un partido en curso.");
+        }
+
         var game = new Game
         {
             GameDate = dto.GameDate,
@@ -21,10 +35,13 @@ public class GameService(IGameRepository gameRepo, ScoreboardDbContext ctx) : IG
             GameStatus = GameStatus.NOT_STARTED,
             RemainingTime = dto.PeriodSeconds ?? 600
         };
+
         await _gameRepo.AddAsync(game);
         await _gameRepo.SaveChangesAsync();
+
         return game;
     }
+
 
     public Task<Game?> GetAsync(int gameId) => _gameRepo.GetGameWithDetailsAsync(gameId);
 
@@ -171,6 +188,16 @@ public class GameService(IGameRepository gameRepo, ScoreboardDbContext ctx) : IG
     {
         var game = await RequireGame(gameId);
         game.GameStatus = GameStatus.SUSPENDED;
+        game.PeriodStartTime = null;
+        await _gameRepo.SaveChangesAsync();
+        return game;
+    }
+
+    public async Task<Game> FinishGameAsync(int gameId)
+    {
+        var game = await RequireGame(gameId);
+        game.GameStatus = GameStatus.FINISHED;
+        game.RemainingTime = 0;
         game.PeriodStartTime = null;
         await _gameRepo.SaveChangesAsync();
         return game;

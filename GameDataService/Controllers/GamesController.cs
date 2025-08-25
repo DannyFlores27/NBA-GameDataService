@@ -10,7 +10,18 @@ public class GamesController(IGameService svc) : ControllerBase
 {
     [HttpPost]
     public async Task<ActionResult<Game>> Create([FromBody] CreateGameDto dto)
-        => Ok(await svc.CreateGameAsync(dto));
+    {
+        try
+        {
+            var game = await svc.CreateGameAsync(dto);
+            return Ok(game);
+        }
+        catch (InvalidOperationException ex)
+        {
+            // Devuelve un 409 Conflict con el mensaje de error
+            return Conflict(new { message = ex.Message });
+        }
+    }
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Game>> Get(int id)
@@ -77,6 +88,9 @@ public class GamesController(IGameService svc) : ControllerBase
 
     [HttpPost("{id:int}/suspend")]
     public async Task<ActionResult<Game>> Suspend(int id) => Ok(await svc.SuspendAsync(id));
+
+    [HttpPost("{id:int}/finish")]
+    public async Task<ActionResult<Game>> Finish(int id) => Ok(await svc.FinishGameAsync(id));
 
     // "Guardar": los cambios ya se guardan en cada acción; este endpoint es opcional/no-op.
     [HttpPost("{id:int}/save")]

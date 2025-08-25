@@ -15,4 +15,13 @@ public class GameRepository(ScoreboardDbContext ctx) : GenericRepository<Game>(c
             .Include(g => g.TeamFouls)
             .Include(g => g.PlayerFouls)
             .FirstOrDefaultAsync(g => g.GameId == id);
+
+    public async Task<bool> IsTeamInActiveGameAsync(int teamId)
+    {
+        return await _ctx.Games.AnyAsync(g =>
+            (g.HomeTeamId == teamId || g.AwayTeamId == teamId) &&
+            (g.GameStatus == GameStatus.RUNNING || g.GameStatus == GameStatus.PAUSED)
+        );
+    }
+
 }
