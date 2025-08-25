@@ -8,6 +8,14 @@ public class GameRepository(ScoreboardDbContext ctx) : GenericRepository<Game>(c
 {
     private readonly ScoreboardDbContext _ctx = ctx;
 
+    public async Task<IEnumerable<Game>> GetAllGamesWithDetailsAsync() =>
+        await _ctx.Games
+            .Include(g => g.HomeTeam)
+            .Include(g => g.AwayTeam)
+            .Include(g => g.TeamFouls)
+            .Include(g => g.PlayerFouls)
+            .ToListAsync();
+
     public async Task<Game?> GetGameWithDetailsAsync(int id) =>
         await _ctx.Games
             .Include(g => g.HomeTeam)

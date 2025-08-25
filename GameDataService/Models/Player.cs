@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace GameDataService.Models;
 
@@ -19,5 +20,6 @@ public class Player
     [MaxLength(50)]
     public string? Position { get; set; }
 
+    [JsonIgnore]
     public Team? Team { get; set; }
 }

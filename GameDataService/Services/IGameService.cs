@@ -7,6 +7,8 @@ public interface IGameService
     Task<Game> CreateGameAsync(CreateGameDto dto);
     Task<Game?> GetAsync(int gameId);
     Task<Game> AddPointsAsync(int gameId, bool home, int points);
+    Task<IEnumerable<Game>> GetAllAsync();
+
     Task<Game> SubtractPointAsync(int gameId, bool home);
     Task<Game> TeamFoulAsync(int gameId, int teamId, int period, int delta);
     Task<Game> PlayerFoulAsync(int gameId, int playerId, int period, int delta);

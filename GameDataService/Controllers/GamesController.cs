@@ -23,6 +23,11 @@ public class GamesController(IGameService svc) : ControllerBase
         }
     }
 
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Game>>> GetAll()
+        => Ok(await svc.GetAllAsync());
+
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Game>> Get(int id)
         => (await svc.GetAsync(id)) is { } g ? Ok(g) : NotFound();

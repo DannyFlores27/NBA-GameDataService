@@ -42,5 +42,11 @@ public class ScoreboardDbContext(DbContextOptions<ScoreboardDbContext> options) 
         modelBuilder.Entity<PlayerFoul>()
             .HasIndex(pf => new { pf.GameId, pf.PlayerId, pf.Period })
             .IsUnique();
+
+        modelBuilder.Entity<Team>()
+            .HasMany(t => t.Players)
+            .WithOne(p => p.Team)
+            .HasForeignKey(p => p.TeamId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

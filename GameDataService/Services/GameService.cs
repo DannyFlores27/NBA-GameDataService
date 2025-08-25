@@ -45,6 +45,8 @@ public class GameService(IGameRepository gameRepo, ScoreboardDbContext ctx) : IG
 
     public Task<Game?> GetAsync(int gameId) => _gameRepo.GetGameWithDetailsAsync(gameId);
 
+    public Task<IEnumerable<Game>> GetAllAsync() => _gameRepo.GetAllGamesWithDetailsAsync();
+
     public async Task<Game> AddPointsAsync(int gameId, bool home, int points)
     {
         var game = await RequireGame(gameId);
