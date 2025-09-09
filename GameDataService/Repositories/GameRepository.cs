@@ -1,35 +1,53 @@
 ﻿using GameDataService.Data;
 using GameDataService.Models;
+using GameDataService.Repositories.interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameDataService.Repositories;
-
-public class GameRepository(ScoreboardDbContext ctx) : GenericRepository<Game>(ctx), IGameRepository
+public class GameRepository : IGameRepository
 {
-    private readonly ScoreboardDbContext _ctx = ctx;
+    private readonly ScoreboardDbContext _context;
 
-    public async Task<IEnumerable<Game>> GetAllGamesWithDetailsAsync() =>
-        await _ctx.Games
-            .Include(g => g.HomeTeam)
-            .Include(g => g.AwayTeam)
-            .Include(g => g.TeamFouls)
-            .Include(g => g.PlayerFouls)
-            .ToListAsync();
-
-    public async Task<Game?> GetGameWithDetailsAsync(int id) =>
-        await _ctx.Games
-            .Include(g => g.HomeTeam)
-            .Include(g => g.AwayTeam)
-            .Include(g => g.TeamFouls)
-            .Include(g => g.PlayerFouls)
-            .FirstOrDefaultAsync(g => g.GameId == id);
-
-    public async Task<bool> IsTeamInActiveGameAsync(int teamId)
+    public GameRepository(ScoreboardDbContext context)
     {
-        return await _ctx.Games.AnyAsync(g =>
-            (g.HomeTeamId == teamId || g.AwayTeamId == teamId) &&
-            (g.GameStatus == GameStatus.RUNNING || g.GameStatus == GameStatus.PAUSED)
-        );
+        _context = context;
     }
 
+    public async Task<IEnumerable<Game>> GetAll()
+    {
+        return await _context.Games.ToListAsync();
+    }
+
+    public async Task<Game?> GetById(int id)
+    {
+        return await _context.Games.FindAsync(id);
+    }
+
+    public async Task<Game> Add(Game game)
+    {
+        _context.Games.Add(game);
+        await _context.SaveChangesAsync();
+        return game;
+    }
+
+    public async Task<Game?> Update(Game game)
+    {
+        var existingGame = await _context.Games.FindAsync(game.GameId);
+        if (existingGame == null)
+            return null;
+
+        _context.Entry(existingGame).CurrentValues.SetValues(game);
+        await _context.SaveChangesAsync();
+        return existingGame;
+    }
+
+    public async Task<bool> Delete(int id)
+    {
+        var game = await _context.Games.FindAsync(id);
+        if (game == null)
+            return false;
+
+        _context.Games.Remove(game);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

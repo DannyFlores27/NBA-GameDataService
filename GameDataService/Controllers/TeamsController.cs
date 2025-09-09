@@ -1,48 +1,71 @@
 ﻿using GameDataService.Models;
-using GameDataService.Repositories;
+using GameDataService.Services.interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameDataService.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class TeamsController(IGenericRepository<Team> repo) : ControllerBase
+public class TeamsController : ControllerBase
 {
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Team>>> Get() => Ok(await repo.GetAllAsync());
+    private readonly ITeamService _teamService;
 
-    [HttpGet("{id:int}")]
-    public async Task<ActionResult<Team>> Get(int id)
-        => (await repo.GetByIdAsync(id)) is { } team ? Ok(team) : NotFound();
+    public TeamsController(ITeamService teamService)
+    {
+        _teamService = teamService;
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<Team>>> GetAllTeams()
+    {
+        var teams = await _teamService.GetAllAsync();
+        return Ok(teams);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Team>> GetTeamById(int id)
+    {
+        var team = await _teamService.GetByIdAsync(id);
+        if (team == null)
+        {
+            return NotFound();
+        }
+        return Ok(team);
+    }
 
     [HttpPost]
-    public async Task<ActionResult<Team>> Post([FromBody] Team team)
+    public async Task<ActionResult<Team>> CreateTeam(Team team)
     {
-        await repo.AddAsync(team);
-        await repo.SaveChangesAsync();
-        return CreatedAtAction(nameof(Get), new { id = team.TeamId }, team);
+        var createdTeam = await _teamService.AddAsync(team);
+        return CreatedAtAction(nameof(GetTeamById), new { id = createdTeam.TeamId }, createdTeam);
     }
 
-    [HttpPut("{id:int}")]
-    public async Task<IActionResult> Put(int id, [FromBody] Team updated)
+    [HttpPut("{id}")]
+    public async Task<ActionResult<Team>> UpdateTeam(int id, Team team)
     {
-        var existing = await repo.GetByIdAsync(id);
-        if (existing is null) return NotFound();
-        existing.Name = updated.Name;
-        existing.City = updated.City;
-        existing.LogoUrl = updated.LogoUrl;
-        repo.Update(existing);
-        await repo.SaveChangesAsync();
-        return NoContent();
+        if (id != team.TeamId)
+        {
+            return BadRequest();
+        }
+
+        var updatedTeam = await _teamService.UpdateAsync(team);
+        if (updatedTeam == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(updatedTeam);
     }
 
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> Delete(int id)
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteTeam(int id)
     {
-        var existing = await repo.GetByIdAsync(id);
-        if (existing is null) return NotFound();
-        repo.Remove(existing);
-        await repo.SaveChangesAsync();
+        var result = await _teamService.DeleteAsync(id);
+        if (!result)
+        {
+            return NotFound();
+        }
+
         return NoContent();
     }
 }
